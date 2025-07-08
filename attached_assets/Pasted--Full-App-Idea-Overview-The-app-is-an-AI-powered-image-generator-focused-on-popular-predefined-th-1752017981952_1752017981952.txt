@@ -1,0 +1,78 @@
+📌 Full App Idea Overview
+The app is an AI-powered image generator focused on popular predefined themes from games, movies, TV shows, and special effects — no text input from users.
+
+Users pick a theme from a curated list (like Minecraft, GTA, Stranger Things, etc.), and the app generates a themed image using OpenAI’s image generation API.
+
+One special theme lets users upload their own photo, which the app processes with an AI model that transforms the person in the photo into a baby version — while keeping the original look and details intact.
+
+All themes and their AI prompts are managed dynamically through a secure admin panel. This lets the product team add, edit, or remove themes and prompts without developer intervention.
+
+The whole system should be scalable, secure, and fast — delivering images with smooth user experience on mobile (Flutter app) and easy backend management (Supabase).
+
+🚀 Development Plan: Flutter Frontend + Supabase Backend
+1. Tech Stack
+Flutter: Cross-platform app (iOS & Android) with smooth UI for theme selection, image generation, photo upload, and image display.
+
+Supabase: Backend database (PostgreSQL), authentication, storage for photos & generated images, and API hosting.
+
+OpenAI API: For prompt-based image generation.
+
+3rd-Party AI: For photo baby transformation (image-to-image model).
+
+Admin Panel: Built either in Flutter Web or a web framework consuming Supabase APIs for managing themes/prompts.
+
+2. Core User Features
+User launches the app → sees categories (Games, TV Shows, Baby Transformation).
+
+User picks a category → sees available themes as cards.
+
+User taps a theme → app sends the associated prompt to OpenAI → displays generated image.
+
+For baby transformation → user uploads photo → app sends photo to AI → displays transformed baby image.
+
+Users can save/share generated images.
+
+Optional: user account to save history.
+
+3. Admin Panel Features
+Secure login via Supabase Auth.
+
+Manage themes: add, edit, delete themes and their prompts dynamically.
+
+Themes stored in Supabase database.
+
+Changes appear instantly in the user app.
+
+Ability to search and paginate theme list.
+
+Tagging, categorization, and status (active/inactive) for themes.
+
+4. Supabase Backend Setup
+Database tables for themes, users, generated images.
+
+Storage buckets for user uploads and generated images.
+
+API endpoints or Supabase Edge Functions to:
+
+Fetch theme lists for app.
+
+Trigger OpenAI and baby-transformer AI calls.
+
+Save image metadata.
+
+Secure endpoints with authentication and validation.
+
+5. Developer Guidelines
+Flutter app connects to Supabase to fetch dynamic themes and user data.
+
+Use Flutter widgets for responsive UI.
+
+Admin panel is a separate app or web interface consuming the same Supabase backend.
+
+Implement full CRUD for themes in admin.
+
+Handle file uploads securely with Supabase Storage.
+
+Ensure fast, reliable image generation and display.
+
+Follow best practices for security, error handling, and scalability.
