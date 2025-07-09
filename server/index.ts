@@ -3,6 +3,15 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { db } from './drizzle.config';
 
+// Test database connection
+try {
+  await db.select().from('themes').limit(1);
+  console.log('Database connection successful');
+} catch (error) {
+  console.error('Database connection error:', error);
+  process.exit(1);
+}
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
