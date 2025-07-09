@@ -7,8 +7,8 @@
       "startCommand": "npm start",
       "env": {
         "NODE_ENV": "production",
-        "SUPABASE_DATABASE_URL": "postgresql://postgres:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13dGVub2FscXZhZGdjbXlzenFlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjAxNDYwMiwiZXhwIjoyMDY3NTkwNjAyfQ.5a8gK66zXx9meZqxhu5YGMoMmy4k5SCpVkJi8ubnan0@10.10.10.10:5432/postgres?connect_timeout=10",
-        "DATABASE_URL": "postgresql://postgres:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13dGVub2FscXZhZGdjbXlzenFlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjAxNDYwMiwiZXhwIjoyMDY3NTkwNjAyfQ.5a8gK66zXx9meZqxhu5YGMoMmy4k5SCpVkJi8ubnan0@10.10.10.10:5432/postgres?connect_timeout=10",
+        "SUPABASE_DATABASE_URL": "postgresql://postgres:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13dGVub2FscXZhZGdjbXlzenFlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjAxNDYwMiwiZXhwIjoyMDY3NTkwNjAyfQ.5a8gK66zXx9meZqxhu5YGMoMmy4k5SCpVkJi8ubnan0@db.mwtenoalqvadgcmyszqe.supabase.co:5432/postgres?connect_timeout=10",
+        "DATABASE_URL": "postgresql://postgres:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13dGVub2FscXZhZGdjbXlzenFlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjAxNDYwMiwiZXhwIjoyMDY3NTkwNjAyfQ.5a8gK66zXx9meZqxhu5YGMoMmy4k5SCpVkJi8ubnan0@db.mwtenoalqvadgcmyszqe.supabase.co:5432/postgres?connect_timeout=10",
         "SUPABASE_URL": "https://mwtenoalqvadgcmyszqe.supabase.co",
         "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13dGVub2FscXZhZGdjbXlzenFlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjAxNDYwMiwiZXhwIjoyMDY3NTkwNjAyfQ.5a8gK66zXx9meZqxhu5YGMoMmy4k5SCpVkJi8ubnan0"
       },
