@@ -1,15 +1,30 @@
 import OpenAI from "openai";
 
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || ""
+// Configure OpenRouter.ai
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      OPENROUTER_API_KEY: string;
+    }
+  }
+}
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
+  headers: {
+    "HTTP-Referer": "https://your-app.onrender.com",
+    "X-Title": "My App",
+    "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    "Content-Type": "application/json"
+  }
 });
 
 // Test OpenAI connection
 export async function testOpenAIConnection(): Promise<boolean> {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("OpenAI API key is not configured");
+    if (!process.env.OPENROUTER_API_KEY) {
+      console.error("OpenRouter API key is not configured");
       return false;
     }
     
@@ -37,8 +52,8 @@ export async function generateImage(prompt: string): Promise<GenerationResult> {
   const startTime = Date.now();
   
   // Validate API key exists
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OpenAI API key is not configured");
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new Error("OpenRouter API key is not configured");
   }
   
   // Validate prompt
@@ -57,19 +72,20 @@ export async function generateImage(prompt: string): Promise<GenerationResult> {
     
     const response = await openai.images.generate({
       model: "dall-e-3",
+      response_format: "url",
+      user: "your-user-id",  // Replace with your actual user ID
       prompt: cleanPrompt,
       n: 1,
       size: "1024x1024",
-      quality: "standard",
-      response_format: "url"
+      quality: "standard"
     });
+
+    if (!response.data[0]?.url) {
+      throw new Error("No image URL returned from OpenRouter");
+    }
 
     const generationTime = Math.floor((Date.now() - startTime) / 1000);
     
-    if (!response.data[0]?.url) {
-      throw new Error("No image URL returned from OpenAI");
-    }
-
     console.log(`Image generated successfully in ${generationTime}s`);
     
     return {
@@ -93,7 +109,7 @@ export async function generateImage(prompt: string): Promise<GenerationResult> {
       }
       throw new Error(`Invalid request: ${error.message || 'Please check your prompt and try again'}`);
     } else if (error.status === 401) {
-      throw new Error("Invalid OpenAI API key");
+      throw new Error("Invalid OpenRouter API key");
     } else if (error.status === 429) {
       throw new Error("API rate limit exceeded. Please try again later.");
     } else if (error.status === 500) {
