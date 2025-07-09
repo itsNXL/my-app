@@ -1,15 +1,12 @@
-import path from 'path';
-import fs from 'fs/promises';
-import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
+import { supabaseUrl, supabaseServiceRoleKey } from '../config';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 export async function uploadImage(imageUrl: string, userId: number): Promise<string> {
   try {
     // Create a unique filename
     const filename = `generated_images/${userId}_${Date.now()}.jpg`;
-    const localPath = path.join(__dirname, '..', '..', 'public', filename);
     
     // Download the image from the URL
     const response = await fetch(imageUrl);
@@ -17,15 +14,25 @@ export async function uploadImage(imageUrl: string, userId: number): Promise<str
       throw new Error('Failed to download image');
     }
     
-    // Create directories if they don't exist
-    await fs.mkdir(path.dirname(localPath), { recursive: true });
+    // Convert to blob
+    const blob = await response.blob();
     
-    // Save to local file
-    const buffer = await response.arrayBuffer();
-    await fs.writeFile(localPath, Buffer.from(buffer));
+    // Upload to Supabase storage
+    const { error } = await supabase.storage
+      .from('generated-images')
+      .upload(filename, blob, {
+        cacheControl: '3600',
+        upsert: false
+      });
 
-    // Return a URL that can be used to access the image
-    return `${process.env.SUPABASE_URL}/storage/v1/object/public/generated-images/${filename}`;
+    if (error) throw error;
+
+    // Get the public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('generated-images')
+      .getPublicUrl(filename);
+
+    return publicUrl;
   } catch (error) {
     console.error('Error uploading image:', error);
     throw new Error('Failed to upload image');
