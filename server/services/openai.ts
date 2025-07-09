@@ -93,30 +93,9 @@ export async function generateImage(prompt: string): Promise<GenerationResult> {
       prompt: cleanPrompt,
       generationTime: generationTime,
     };
-  } catch (error: any) {
-    console.error("OpenAI Image Generation Error:", {
-      message: error.message,
-      status: error.status,
-      type: error.type,
-      code: error.code,
-      param: error.param
-    });
-    
-    // Provide more specific error messages
-    if (error.status === 400) {
-      if (error.type === 'image_generation_user_error') {
-        throw new Error("The prompt contains content that violates OpenAI's usage policies. Please try a different prompt.");
-      }
-      throw new Error(`Invalid request: ${error.message || 'Please check your prompt and try again'}`);
-    } else if (error.status === 401) {
-      throw new Error("Invalid OpenRouter API key");
-    } else if (error.status === 429) {
-      throw new Error("API rate limit exceeded. Please try again later.");
-    } else if (error.status === 500) {
-      throw new Error("OpenAI service is temporarily unavailable");
-    }
-    
-    throw new Error(`Failed to generate image: ${error.message || 'Unknown error'}`);
+  } catch (error) {
+    console.error("Error generating image:", error);
+    throw new Error("Failed to generate image");
   }
 }
 
@@ -137,7 +116,11 @@ export async function generateBabyTransformPrompt(description: string): Promise<
       max_tokens: 200,
     });
 
-    return response.choices[0].message.content || "Transform this person into a cute baby version while maintaining their key facial features and characteristics";
+    if (!response?.data?.choices?.[0]?.message?.content) {
+      throw new Error("Failed to generate prompt");
+    }
+
+    return response.data.choices[0].message.content;
   } catch (error) {
     console.error("OpenAI Prompt Generation Error:", error);
     return "Transform this person into a cute baby version while maintaining their key facial features and characteristics";

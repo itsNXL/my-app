@@ -15,6 +15,8 @@ interface FiltersProps {
 
 export default function Filters({ onBack, selectedFile, onFilterSelected }: FiltersProps) {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
   const { data: themes, isLoading } = useThemes();
 
   const categories = [
