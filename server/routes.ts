@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateImage, generateBabyTransformPrompt } from "./services/openai";
+import { generateImage, generateBabyTransformPrompt, testOpenAIConnection } from "./services/openai";
 import { insertThemeSchema, insertGeneratedImageSchema, insertBabyTransformSchema } from "@shared/schema";
 import multer from "multer";
 import path from "path";
@@ -25,6 +25,28 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Test OpenAI connection at startup
+  console.log("Testing OpenAI connection...");
+  await testOpenAIConnection();
+  
+  // Health check endpoint
+  app.get("/api/health", async (req, res) => {
+    try {
+      const openaiStatus = await testOpenAIConnection();
+      res.json({ 
+        status: "ok", 
+        openai: openaiStatus ? "connected" : "disconnected",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        status: "error", 
+        openai: "disconnected",
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+  
   // Get all themes or filter by category
   app.get("/api/themes", async (req, res) => {
     try {
