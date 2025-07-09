@@ -7,7 +7,8 @@
       "startCommand": "npm start",
       "env": {
         "NODE_ENV": "production",
-        "SUPABASE_DATABASE_URL": "https://mwtenoalqvadgcmyszqe.supabase.co"
+        "SUPABASE_DATABASE_URL": "https://mwtenoalqvadgcmyszqe.supabase.co",
+        "DATABASE_URL": "https://mwtenoalqvadgcmyszqe.supabase.co"
       },
       "allowedDomains": ["your-app-name.onrender.com"],
       "healthCheckPath": "/",
