@@ -161,13 +161,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const userId = req.body.userId ? parseInt(req.body.userId) : null;
       
-      // Convert uploaded file to base64 for processing
-      const imageBuffer = fs.readFileSync(req.file.path);
-      const base64Image = imageBuffer.toString('base64');
-      
       // Generate baby transformation prompt
       const transformPrompt = await generateBabyTransformPrompt(
-        "Transform this person into a cute baby version while maintaining their key facial features"
+        "Transform this person into a cute baby version while maintaining their key facial features and characteristics"
       );
       
       // Generate the baby image
@@ -182,8 +178,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const babyTransform = await storage.createBabyTransform(transformData);
       
-      // Clean up uploaded file (optional, depends on your storage strategy)
-      fs.unlinkSync(req.file.path);
+      // Clean up uploaded file after processing
+      setTimeout(() => {
+        try {
+          if (req.file) {
+            fs.unlinkSync(req.file.path);
+          }
+        } catch (cleanupError) {
+          console.error("Error cleaning up uploaded file:", cleanupError);
+        }
+      }, 1000);
       
       res.json({
         ...babyTransform,

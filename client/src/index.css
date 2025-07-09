@@ -74,4 +74,17 @@
   .gradient-accent {
     background: linear-gradient(135deg, hsl(38, 92%, 50%), hsl(45, 93%, 47%));
   }
+
+  .pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
 }

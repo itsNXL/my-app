@@ -56,10 +56,12 @@ Preferred communication style: Simple, everyday language.
 
 ## Data Flow
 
-1. **Theme Selection**: User selects category → fetches themes → displays in grid
-2. **Image Generation**: User selects theme → sends theme ID to backend → OpenAI API call → image URL returned
-3. **Baby Transform**: User uploads photo → multer processes file → AI transformation → result displayed
-4. **Admin Management**: Admin creates/edits themes → updates database → changes reflected in user interface
+1. **Splash Screen**: App starts with animated splash screen → user clicks "Get Started"
+2. **Photo Upload**: User uploads photo from gallery or camera → file validation → continue to filters
+3. **Filter Selection**: User browses categorized filters (games, movies, TV, baby) → selects filter → continues to generation
+4. **AI Generation**: Selected filter + uploaded photo → OpenAI API processing → transformed result displayed
+5. **Result Screen**: Shows before/after comparison → download/share options → option to transform another photo
+6. **Admin Access**: Hidden admin button on splash screen → comprehensive theme management panel
 
 ## External Dependencies
 
