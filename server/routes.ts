@@ -3,11 +3,12 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateImage, generateBabyTransformPrompt, testOpenAIConnection } from "./services/openai";
 import { insertThemeSchema, insertGeneratedImageSchema, insertBabyTransformSchema } from "@shared/schema";
+import { signUpUser, signInUser, signOutUser, uploadImage } from "./supabase-examples";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Configure multer for file uploads
+// Configure multer for temporary file uploads
 const upload = multer({
   dest: "uploads/",
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
@@ -24,10 +25,46 @@ const upload = multer({
   },
 });
 
+// Helper function to convert multer file to File object
+const multerFileToFile = (multerFile: Express.Multer.File): File => {
+  const fileBuffer = fs.readFileSync(multerFile.path);
+  return new File([fileBuffer], multerFile.originalname, { type: multerFile.mimetype });
+};
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Test OpenAI connection at startup
   console.log("Testing OpenAI connection...");
   await testOpenAIConnection();
+
+  // Auth routes
+  app.post("/api/auth/signup", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const data = await signUpUser(email, password);
+      res.json(data);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/auth/signin", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const data = await signInUser(email, password);
+      res.json(data);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/auth/signout", async (req, res) => {
+    try {
+      await signOutUser();
+      res.json({ message: "Signed out successfully" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
   
   // Health check endpoint
   app.get("/api/health", async (req, res) => {
@@ -183,6 +220,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const userId = req.body.userId ? parseInt(req.body.userId) : null;
       
+      // Upload original image to Supabase Storage
+      const file = multerFileToFile(req.file);
+      const uploadResult = await uploadImage(file, 'original-photos');
+      
       // Generate baby transformation prompt
       const transformPrompt = await generateBabyTransformPrompt(
         "Transform this person into a cute baby version while maintaining their key facial features and characteristics"
@@ -194,9 +235,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Save baby transform record
       const transformData = insertBabyTransformSchema.parse({
         userId: userId,
-        originalImageUrl: `/uploads/${req.file.filename}`,
+        originalImageUrl: uploadResult.url,
         transformedImageUrl: result.imageUrl,
       });
+      
+      // Clean up temporary file
+      fs.unlinkSync(req.file.path);
       
       const babyTransform = await storage.createBabyTransform(transformData);
       

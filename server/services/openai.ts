@@ -71,7 +71,7 @@ export async function generateImage(prompt: string): Promise<GenerationResult> {
     console.log(`Generating image with prompt: "${cleanPrompt.substring(0, 100)}..."`);
     
     const response = await openai.images.generate({
-      model: "dall-e-3",
+      model: "openai/dall-e-3",
       response_format: "url",
       user: "your-user-id",  // Replace with your actual user ID
       prompt: cleanPrompt,
