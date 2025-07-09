@@ -1,0 +1,17 @@
+{
+  "services": [
+    {
+      "name": "your-app-name",
+      "type": "web",
+      "buildCommand": "npm install && npm run build",
+      "startCommand": "npm start",
+      "env": {
+        "NODE_ENV": "production",
+        "SUPABASE_DATABASE_URL": "https://mwtenoalqvadgcmyszqe.supabase.co"
+      },
+      "allowedDomains": ["your-app-name.onrender.com"],
+      "healthCheckPath": "/",
+      "instanceType": "nano"
+    }
+  ]
+}
